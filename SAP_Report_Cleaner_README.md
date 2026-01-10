@@ -15,12 +15,56 @@ Dieses Python-Script bereinigt SAP-Reports, die als Tab-getrennte Textdateien (`
 
 ---
 
-## Voraussetzungen
+## Installation auf anderen Computern
+
+### Benötigte Dateien
+
+Kopieren Sie diese Dateien in einen **gemeinsamen Ordner** auf dem Zielcomputer:
+
+```
+📁 SAP_Report_Cleaner/
+├── SAP_Report_Cleaner.command    ← macOS: Doppelklick zum Starten
+├── SAP_Report_Cleaner.bat        ← Windows: Doppelklick zum Starten
+├── sap_report_cleaner_gui.py     ← Hauptprogramm (erforderlich)
+├── sap_report_cleaner.py         ← Kommandozeilen-Version (optional)
+└── SAP_Report_Cleaner_README.md  ← Diese Anleitung (optional)
+```
+
+**Wichtig:** Alle `.py` Dateien müssen im **gleichen Ordner** wie die Starter-Dateien (`.command` / `.bat`) liegen!
+
+### Speicherort
+
+Sie können den Ordner an beliebiger Stelle speichern, z.B.:
+- **macOS:** `/Users/[Benutzername]/Documents/SAP_Report_Cleaner/`
+- **Windows:** `C:\Users\[Benutzername]\Documents\SAP_Report_Cleaner\`
+- **Netzlaufwerk:** `\\Server\Freigabe\Tools\SAP_Report_Cleaner\`
+
+### Voraussetzung: Python 3
+
+Der Zielcomputer benötigt **Python 3.7 oder höher**.
+
+**Installation prüfen (Terminal/Eingabeaufforderung):**
+```bash
+python3 --version
+```
+
+**Python installieren:**
+- **Download:** https://www.python.org/downloads/
+- **Windows:** Bei Installation ✅ "Add Python to PATH" aktivieren!
+- **macOS:** Python 3 ist oft vorinstalliert, sonst über python.org oder `brew install python3`
+
+### Automatische Abhängigkeiten
+
+Die Starter-Scripts (`.command` / `.bat`) installieren fehlende Abhängigkeiten (pandas, openpyxl) **automatisch** beim ersten Start.
+
+---
+
+## Voraussetzungen (Zusammenfassung)
 
 ### Python-Version
 - Python 3.7 oder höher
 
-### Abhängigkeiten installieren
+### Abhängigkeiten (werden automatisch installiert)
 
 ```bash
 pip3 install pandas openpyxl
