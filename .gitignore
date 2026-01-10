@@ -9,3 +9,8 @@ __pycache__/
 # macOS
 .DS_Store
 
+# Quelldaten (nicht ins Repo)
+sourceDateien/
+
+# Temporäre Excel-Dateien
+~$*.xlsx
