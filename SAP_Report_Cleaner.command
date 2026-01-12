@@ -12,7 +12,7 @@ echo "  SAP Report Cleaner"
 echo "============================================================"
 echo ""
 
-# Python-Pfad finden (versucht verschiedene Optionen)
+# Python-Pfad finden
 PYTHON_CMD=""
 
 # Option 1: Lokale venv (falls vorhanden)
@@ -24,7 +24,6 @@ elif [ -f ".venv/bin/python" ]; then
 elif command -v python3 &> /dev/null; then
     PYTHON_CMD="python3"
 elif command -v python &> /dev/null; then
-    # Prüfe ob es Python 3 ist
     if python --version 2>&1 | grep -q "Python 3"; then
         PYTHON_CMD="python"
     fi
@@ -45,6 +44,7 @@ if [ -z "$PYTHON_CMD" ]; then
 fi
 
 echo "✓ Python gefunden: $PYTHON_CMD"
+$PYTHON_CMD --version
 
 # Prüfe ob das Python-Script existiert
 if [ ! -f "sap_report_cleaner_gui.py" ]; then
@@ -56,26 +56,59 @@ if [ ! -f "sap_report_cleaner_gui.py" ]; then
     exit 1
 fi
 
-# Prüfe und installiere Abhängigkeiten
-echo "✓ Prüfe Abhängigkeiten..."
-
-# pandas prüfen
-$PYTHON_CMD -c "import pandas" 2>/dev/null
-if [ $? -ne 0 ]; then
-    echo "  → Installiere pandas..."
-    $PYTHON_CMD -m pip install pandas -q
-fi
-
-# openpyxl prüfen
-$PYTHON_CMD -c "import openpyxl" 2>/dev/null
-if [ $? -ne 0 ]; then
-    echo "  → Installiere openpyxl..."
-    $PYTHON_CMD -m pip install openpyxl -q
-fi
-
-echo "✓ Abhängigkeiten OK"
+# ============================================================
+# Abhängigkeiten installieren
+# ============================================================
 echo ""
+echo "Prüfe Abhängigkeiten..."
+
+# Funktion zum Prüfen und Installieren eines Pakets
+install_if_missing() {
+    PACKAGE=$1
+    IMPORT_NAME=${2:-$1}  # Falls Import-Name anders als Paketname
+    
+    $PYTHON_CMD -c "import $IMPORT_NAME" 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "  → Installiere $PACKAGE..."
+        $PYTHON_CMD -m pip install $PACKAGE -q --user
+        if [ $? -ne 0 ]; then
+            echo "    ⚠ Installation fehlgeschlagen, versuche ohne --user..."
+            $PYTHON_CMD -m pip install $PACKAGE -q
+        fi
+    else
+        echo "  ✓ $PACKAGE"
+    fi
+}
+
+# Hauptabhängigkeiten installieren
+install_if_missing "pandas"
+install_if_missing "openpyxl"
+install_if_missing "numpy"
+
+# tkinter prüfen (kann nicht per pip installiert werden)
+$PYTHON_CMD -c "import tkinter" 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "⚠ Warnung: tkinter nicht gefunden!"
+    echo "  tkinter ist normalerweise in Python enthalten."
+    echo ""
+    echo "  Falls Sie Python über Homebrew installiert haben:"
+    echo "    → brew install python-tk"
+    echo ""
+    echo "  Oder Python von python.org neu installieren"
+    echo "  (enthält tkinter automatisch)"
+    echo ""
+    read -p "Drücken Sie Enter um fortzufahren (oder Ctrl+C zum Abbrechen)..."
+else
+    echo "  ✓ tkinter"
+fi
+
+echo ""
+echo "✓ Alle Abhängigkeiten OK"
+echo ""
+echo "============================================================"
 echo "Starte SAP Report Cleaner..."
+echo "============================================================"
 echo ""
 
 # GUI-Script starten
