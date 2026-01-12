@@ -74,7 +74,30 @@ def select_source_file(filedialog):
     return file_path
 
 
-def select_target_file(filedialog, source_path):
+def select_output_format(tk, messagebox):
+    """Fragt den Nutzer nach dem gewünschten Ausgabeformat."""
+    print("\n📄 Bitte Ausgabeformat wählen...")
+    
+    # Einfacher Dialog mit Buttons
+    result = messagebox.askquestion(
+        "Ausgabeformat wählen",
+        "Möchten Sie die Daten als Excel-Datei speichern?\n\n"
+        "• Ja = Excel (.xlsx) mit 2 Sheets\n"
+        "  (Bereinigte Daten + Gelöschte Zeilen)\n\n"
+        "• Nein = CSV (.csv)\n"
+        "  (nur bereinigte Daten)",
+        icon='question'
+    )
+    
+    if result == 'yes':
+        print("   ✓ Format: Excel (.xlsx)")
+        return 'xlsx'
+    else:
+        print("   ✓ Format: CSV (.csv)")
+        return 'csv'
+
+
+def select_target_file(filedialog, source_path, file_format='xlsx'):
     """Öffnet Dialog zur Auswahl des Speicherorts."""
     print("\n💾 Bitte Speicherort wählen...")
     
@@ -83,13 +106,17 @@ def select_target_file(filedialog, source_path):
     default_name = f"{source_name}_cleaned"
     source_dir = str(Path(source_path).parent)
     
+    if file_format == 'xlsx':
+        filetypes = [("Excel-Datei", "*.xlsx")]
+        default_ext = ".xlsx"
+    else:
+        filetypes = [("CSV-Datei", "*.csv")]
+        default_ext = ".csv"
+    
     file_path = filedialog.asksaveasfilename(
         title="Bereinigte Datei speichern als",
-        filetypes=[
-            ("Excel-Datei", "*.xlsx"),
-            ("CSV-Datei", "*.csv"),
-        ],
-        defaultextension=".xlsx",
+        filetypes=filetypes,
+        defaultextension=default_ext,
         initialfile=default_name,
         initialdir=source_dir
     )
@@ -401,22 +428,26 @@ def main():
             print("\n⚠ Keine Datei ausgewählt. Abbruch.")
             return
         
-        # 2. Zieldatei wählen
-        target_path = select_target_file(filedialog, source_path)
+        # 2. Ausgabeformat wählen
+        import tkinter as tk
+        file_format = select_output_format(tk, messagebox)
+        
+        # 3. Zieldatei wählen
+        target_path = select_target_file(filedialog, source_path, file_format)
         if not target_path:
             print("\n⚠ Kein Speicherort gewählt. Abbruch.")
             return
         
-        # 3. Verarbeiten
+        # 4. Verarbeiten
         df, df_deleted, stats = process_sap_report(source_path)
         
-        # 4. Datentypen konvertieren
+        # 5. Datentypen konvertieren
         df = convert_data_types(df)
         
-        # 5. Exportieren
+        # 6. Exportieren
         output_path = export_results(df, df_deleted, target_path)
         
-        # 6. Erfolgsmeldung
+        # 7. Erfolgsmeldung
         print("\n" + "=" * 60)
         print("  ✅ Fertig!")
         print("=" * 60)
