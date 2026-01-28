@@ -15,11 +15,24 @@ Dieses Python-Script bereinigt SAP-Reports, die als Tab-getrennte Textdateien (`
 
 ---
 
-## Installation auf anderen Computern
+## Weitergabe an Kollegen
 
-### Benötigte Dateien
+### Fertiges ZIP-Paket (empfohlen)
 
-Kopieren Sie diese Dateien in einen **gemeinsamen Ordner** auf dem Zielcomputer:
+Im Ordner `dist/` liegt ein fertiges ZIP-Paket zur Weitergabe:
+
+```
+📁 dist/
+└── SAP_Report_Cleaner.zip    ← Dieses Paket an Kollegen senden
+```
+
+**Anleitung für Empfänger:**
+1. ZIP-Datei entpacken
+2. Je nach Betriebssystem:
+   - **Windows:** Doppelklick auf `SAP_Report_Cleaner.bat`
+   - **macOS:** Doppelklick auf `SAP_Report_Cleaner.command`
+
+### Inhalt des ZIP-Pakets
 
 ```
 📁 SAP_Report_Cleaner/
@@ -27,7 +40,10 @@ Kopieren Sie diese Dateien in einen **gemeinsamen Ordner** auf dem Zielcomputer:
 ├── SAP_Report_Cleaner.bat        ← Windows: Doppelklick zum Starten
 ├── sap_report_cleaner_gui.py     ← Hauptprogramm (erforderlich)
 ├── sap_report_cleaner.py         ← Kommandozeilen-Version (optional)
-└── SAP_Report_Cleaner_README.md  ← Diese Anleitung (optional)
+├── README.md                     ← Diese Anleitung
+├── INSTALLATION_WINDOWS.md       ← Windows-Installationsanleitung
+├── INSTALLATION_MACOS.md         ← macOS-Installationsanleitung
+└── requirements.txt              ← Python-Abhängigkeiten
 ```
 
 **Wichtig:** Alle `.py` Dateien müssen im **gleichen Ordner** wie die Starter-Dateien (`.command` / `.bat`) liegen!
