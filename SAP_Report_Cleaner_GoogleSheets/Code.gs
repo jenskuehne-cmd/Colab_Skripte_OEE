@@ -97,7 +97,8 @@ function processNewestFile() {
       '📊 Statistik:\n' +
       '   ✓ ' + result.stats.kept + ' bereinigte Zeilen\n' +
       '   ✗ ' + result.stats.sumRows + ' Summenzeilen entfernt\n' +
-      '   ✗ ' + result.stats.noMaterial + ' ohne Materialnr. entfernt\n\n' +
+      '   ✗ ' + result.stats.noMaterial + ' ohne Materialnr. entfernt\n' +
+      '   ✗ ' + result.stats.noWithdrawn + ' ohne Abbuchung entfernt\n\n' +
       'Die Daten sind jetzt im Tab "Bereinigte Daten".',
       ui.ButtonSet.OK);
     
@@ -144,7 +145,7 @@ function processSAPFile(file) {
   // Daten verarbeiten
   const cleanedData = [];
   const deletedData = [];
-  const stats = { total: 0, sumRows: 0, empty: 0, noMaterial: 0, kept: 0 };
+  const stats = { total: 0, sumRows: 0, empty: 0, noMaterial: 0, noWithdrawn: 0, kept: 0 };
   
   for (let rowIdx = headerRowIdx + 1; rowIdx < allRows.length; rowIdx++) {
     const row = allRows[rowIdx];
@@ -174,6 +175,16 @@ function processSAPFile(file) {
     if (!dataRow[0]) {
       stats.noMaterial++;
       deletedData.push(['Keine Materialnummer', rowIdx + 1, dataRow.join('\t')]);
+      continue;
+    }
+    
+    // Keine Abbuchung in Spalte F (Withdrawn)?
+    // Prüfe ob Withdrawn (Index 5) eine gültige Zahl enthält
+    const withdrawnValue = dataRow[5] ? dataRow[5].toString().trim() : '';
+    const withdrawnNumber = cleanNumber(withdrawnValue);
+    if (withdrawnNumber === '' || withdrawnNumber === null || isNaN(withdrawnNumber)) {
+      stats.noWithdrawn++;
+      deletedData.push(['Keine Abbuchung (Spalte F)', rowIdx + 1, dataRow.join('\t')]);
       continue;
     }
     
@@ -380,6 +391,7 @@ function showHelp() {
     '📊 Was wird bereinigt:\n' +
     '   • Summenzeilen (mit * markiert) entfernt\n' +
     '   • Zeilen ohne Materialnummer entfernt\n' +
+    '   • Zeilen ohne Abbuchung (Spalte F) entfernt\n' +
     '   • Zahlenformate korrigiert\n' +
     '   • Nur relevante Spalten (C-Q)',
     ui.ButtonSet.OK);

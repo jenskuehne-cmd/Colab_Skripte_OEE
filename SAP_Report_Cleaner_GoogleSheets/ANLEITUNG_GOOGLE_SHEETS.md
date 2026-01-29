@@ -107,12 +107,25 @@ Die bereinigten Daten sind jetzt im Tab **"Bereinigte Daten"**:
 
 ---
 
+## Was wird bereinigt?
+
+| Aktion | Beschreibung |
+|--------|--------------|
+| Summenzeilen entfernen | Zeilen mit `*` oder `**` in Spalte B |
+| Ohne Materialnummer entfernen | Zeilen ohne Wert in Spalte C (Material) |
+| Ohne Abbuchung entfernen | Zeilen ohne Zahl in Spalte F (Withdrawn) |
+| Zahlenformate korrigieren | Deutsche Formate (1.234,56) → Standard |
+| Datumsformate konvertieren | DD.MM.YY → DD.MM.YYYY |
+| Spalten filtern | Nur Spalten C bis Q (Material bis Customer) |
+
+---
+
 ## Tabs im Sheet
 
 | Tab | Inhalt |
 |-----|--------|
 | **Bereinigte Daten** | Die sauberen Daten zur Weiterverarbeitung |
-| **Gelöschte Zeilen** | Welche Zeilen entfernt wurden und warum |
+| **Gelöschte Zeilen** | Welche Zeilen entfernt wurden und warum (Grund, Zeilennummer, Daten) |
 
 ---
 
